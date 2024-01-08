@@ -7,28 +7,12 @@ let curr_player = 'black';
 
 chessPlaces.forEach(function(place) {
     place.addEventListener('click', function() {
-        // Get the row and column indices from data attributes
         var row = parseInt(place.dataset.row);
         var col = parseInt(place.dataset.col);
 
-        // Example: Log the row and column when a cell is clicked
         console.log('Clicked cell: Row ' + row + ', Column ' + col);
-
-        // Call your move validation function with row and column parameters
-        // moveValidation(row, col);
     });
 });
-
-const allPlaces=[
-    'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
-    'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8',
-    'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
-    'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8',
-    'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8',
-    'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
-    'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8',
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8'
-  ]
 
 const rook = document.querySelectorAll('.rook')
 const knight = document.querySelectorAll('.knight')
@@ -46,74 +30,112 @@ chessPlaces.forEach(place => {
 });
 
 function placeClick(event) {
+
+    let allowed_place = [];
     message.innerHTML = ``;
     let clickedPlace = event.currentTarget;
     const hasImg = clickedPlace.querySelector('img');
-    if (selectedPiece === null) {
-        if (hasImg) {
-            // console.log(hasImg.classList);
+    if (hasImg) {
+        if (selectedPiece == hasImg) {
+            selectedPiece = null;
+            returnColor();
+        }
+        if (selectedPiece === null) {
             selectedPiece = hasImg;
             bgColor = hasImg.style.backgroundColor;
             if (selectedPiece.classList.contains(curr_player)) {
                 clickedPlace.style.backgroundColor = '#fff35f';
                 imgClass = hasImg.classList;
                 if (imgClass.contains('rook')) {
-                    rookFunction(imgClass, hasImg)
+                    allowed_place = rookFunction(selectedPiece, allowed_place);
+                    console.log(allowed_place);
+                    handleAllowedPlaces(allowed_place);
+                }else if (imgClass.contains('knight')) {
+                    allowed_place = knightFunction(selectedPiece, allowed_place);
+                    console.log(allowed_place);
+                    handleAllowedPlaces(allowed_place);
                 }
-                // else if (imgClass.contains('knight')) {
-                //     knightFunction(imgClass, hasImg)
-                // } else if (imgClass.contains('bishop')) {
+                // else if (imgClass.contains('bishop')) {
                 //     bishopFunction(imgClass, hasImg)
                 // } else if (imgClass.contains('queen')) {
                 //     queenFunction(imgClass, hasImg)
                 // } else if (imgClass.contains('king')) {
                 //     kingFunction(imgClass, hasImg)
                 // }
+                
             }else {
                 message.innerHTML = 'Select one of your pieces!';
                 selectedPiece = null; // Reset selectedPiece
             }
         } else {
-            message.innerHTML = `Select any of your piece !`;
+            console.log(`selected piece availabe `);
             selectedPiece = null;
+            returnColor();
         }
     }
     else {
-        console.log(`selected piece availabe `);
-        // black_place.style.backgroundColor = '#779952';
-        // white_place.style.backgroundColor = '#edeed1';
-        selectedPiece = null;
-        chessPlaces.forEach(place => {
-            const defaultColor = place.dataset.defaultColor;
-            place.style.backgroundColor = defaultColor;
-            place.style.pointerEvents = "auto";
-            place.style.opacity = "1";
-        });
+        if (selectedPiece) {
+            console.log(selectedPiece);
+            // Move the selected piece to the clicked place
+            let piece = clickedPlace.querySelector('.piece');
+            if (!piece) {
+                piece = document.createElement('div');
+                piece.classList.add('piece');
+                clickedPlace.appendChild(piece);
+            }
+            piece.innerHTML = selectedPiece.outerHTML;
+            // clickedPlace.appendChild(selectedPiece.cloneNode(true));
+
+            // Reset styles of original place
+            const originalPlace = selectedPiece.parentElement.parentElement;
+            originalPlace.innerHTML = '';
+            originalPlace.style.backgroundColor = originalPlace.dataset.defaultColor;
+
+            // Reset selectedPiece and styles
+            selectedPiece = null;
+            chessPlaces.forEach(place => {
+                const defaultColor = place.dataset.defaultColor;
+                place.style.backgroundColor = defaultColor;
+                place.style.pointerEvents = 'auto';
+                place.style.opacity = '1';
+            });
+        }
     }
 }
 
-function rookFunction(imgClass, hasImg) {
-    let piecePlace = null;
-    let allowed_place = [];
-    let pieceRow = hasImg.parentElement.parentElement.dataset.row;
-    console.log(pieceRow);
-    let pieceCol = hasImg.parentElement.parentElement.dataset.col;
-    console.log(pieceCol);
-    allowed_place = find_range(pieceRow, pieceCol);
-    
-    function find_range(row, col) {
-        for (let i = row+1 ; i < 9; i++) {                 // to check rook movement onto front
-            way_place = document.querySelector(`[data-row="${i}"][data-col="${col}"]`)
+function rookFunction(hasImg, allowed_place) {
+    let row = parseInt(hasImg.parentElement.parentElement.dataset.row);
+    // console.log(row);
+    let col = parseInt(hasImg.parentElement.parentElement.dataset.col);
+    allowed_place.push([row, col]);
+    // console.log(col);
+        console.log(row,col);
+        for (let i = col+1; i <= 8; i++) {                 // to check rook movement onto front           
+            way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
             hasPiece = way_place.querySelector('img');
             if (hasPiece) {
                 if (hasPiece.classList.contains(curr_player))
                     break;
-                allowed_place.push([i,col])
+                allowed_place.push([row,i])
                 break;
             }
-            allowed_place.push([toString(i),col])
+            allowed_place.push([row,i])
         }
-        for (let i = row-1; i > 0; i--) {                 // to check rook movement onto backwards
+        // console.log(row,col);
+        for (let i = col-1; i > 0; i--) {                 // to check rook movement onto backwards
+            way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
+            hasPiece = way_place.querySelector('img');
+            if (hasPiece) {
+                console.log(hasPiece.classList.contains(curr_player));
+                if (hasPiece.classList.contains(curr_player))
+                    break;
+                allowed_place.push([row,i])
+                break;
+            }
+            allowed_place.push([row,i])
+        }
+        // console.log(row,col);
+        for (let i = row+1; i <= 8; i++) {                 // to check rook movement onto front
             way_place = document.querySelector(`[data-row="${i}"][data-col="${col}"]`)
             hasPiece = way_place.querySelector('img');
             if (hasPiece) {
@@ -124,32 +146,141 @@ function rookFunction(imgClass, hasImg) {
             }
             allowed_place.push([i,col])
         }
-        for (let i = col+1 ; i < 9; i++) {                 // to check rook movement onto front
-            way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
+        // console.log(row,col);
+        for (let i = row-1; i > 0; i--) {                 // to check rook movement onto backwards            
+            way_place = document.querySelector(`[data-row="${i}"][data-col="${col}"]`)
             hasPiece = way_place.querySelector('img');
             if (hasPiece) {
                 if (hasPiece.classList.contains(curr_player))
                     break;
-                allowed_place.push([row,i])
+                allowed_place.push([i,col])
                 break;
             }
-            allowed_place.push([row,i])
+            allowed_place.push([i,col])
         }
-        for (let i = col-1; i > 0; i--) {                 // to check rook movement onto backwards
-            way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
-            hasPiece = way_place.querySelector('img');
-            if (hasPiece) {
-                if (hasPiece.classList.contains(curr_player))
-                    break;
-                allowed_place.push([row,i])
-                break;
-            }
-            allowed_place.push([row,i])
-        }
-        console.log(allowed_place);
-        return allowed_place;
-    }
+    // console.log(allowed_place)
+    return allowed_place;
 }
+
+// function knightFunction(hasImg, allowed_place) {
+//     let row = parseInt(hasImg.parentElement.parentElement.dataset.row);
+//     console.log(row);
+//     let col = parseInt(hasImg.parentElement.parentElement.dataset.col);
+//     console.log(col);
+//         console.log(row,col);
+//         for (let i = col+1; i <= 8; i++) {                 // to check rook movement onto front           
+//             way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
+//             hasPiece = way_place.querySelector('img');
+//             if (hasPiece) {
+//                 if (hasPiece.classList.contains(curr_player))
+//                     break;
+//                 allowed_place.push([row,i])
+//                 break;
+//             }
+//             allowed_place.push([row,i])
+//         }
+//         console.log(row,col);
+//         for (let i = col-1; i > 0; i--) {                 // to check rook movement onto backwards
+//             way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
+//             hasPiece = way_place.querySelector('img');
+//             if (hasPiece) {
+//                 console.log(hasPiece.classList.contains(curr_player));
+//                 if (hasPiece.classList.contains(curr_player))
+//                     break;
+//                 allowed_place.push([row,i])
+//                 break;
+//             }
+//             allowed_place.push([row,i])
+//         }
+//         console.log(row,col);
+//         for (let i = row+1; i <= 8; i++) {                 // to check rook movement onto front
+//             way_place = document.querySelector(`[data-row="${i}"][data-col="${col}"]`)
+//             hasPiece = way_place.querySelector('img');
+//             if (hasPiece) {
+//                 if (hasPiece.classList.contains(curr_player))
+//                     break;
+//                 allowed_place.push([i,col])
+//                 break;
+//             }
+//             allowed_place.push([i,col])
+//         }
+//         console.log(row,col);
+//         for (let i = row-1; i > 0; i--) {                 // to check rook movement onto backwards            
+//             way_place = document.querySelector(`[data-row="${i}"][data-col="${col}"]`)
+//             hasPiece = way_place.querySelector('img');
+//             if (hasPiece) {
+//                 if (hasPiece.classList.contains(curr_player))
+//                     break;
+//                 allowed_place.push([i,col])
+//                 break;
+//             }
+//             allowed_place.push([i,col])
+//         }
+//     console.log(allowed_place)
+//     return allowed_place;
+// }
+
+
+
+
+function handleAllowedPlaces(allowed_places) {
+    const chessPlacesArray = Array.from(chessPlaces);
+
+    chessPlacesArray.forEach(place => {
+        const placeRow = place.dataset.row;
+        const placeCol = place.dataset.col;
+        let way_place = [parseInt(placeRow), parseInt(placeCol)]
+        // console.log(way_place);
+        if (!(isNestedArrayPresent(allowed_places,way_place))) {
+            place.style.pointerEvents = "none";
+            place.style.opacity = "0.3";
+        }
+    });
+}
+
+function isNestedArrayPresent(mainArray, nestedArray) {
+    return mainArray.some(arr => 
+        arr.length === nestedArray.length &&
+        arr.every((value, index) => value === nestedArray[index])
+    );
+}
+function returnColor() {
+    chessPlaces.forEach(place => {
+        const defaultColor = place.dataset.defaultColor;
+        place.style.backgroundColor = defaultColor;
+        place.style.pointerEvents = "auto";
+        place.style.opacity = "1";
+    });
+}
+
+
+
+// function handleAllowedPlaces(allowed_places) {
+//     allowed_places.forEach(function(coordinates) {
+//         let row = coordinates[0];
+//         let col = coordinates[1];
+//         console.log(row,col)
+//         highlightCell(row,col);
+//     });
+// }
+
+// function highlightCell(row,col) {
+//     const chessPlacesArray = Array.from(chessPlaces);
+
+//     chessPlacesArray.forEach(place => {
+//         const placeRow = place.dataset.row;
+//         const placeCol = place.dataset.col;
+//         place.style.pointerEvents = "none";
+//         place.style.opacity = "0.5";
+
+//         console.log(`Row: ${row}, Col: ${col}, PlaceRow: ${placeRow}, PlaceCol: ${placeCol}`);
+//         // if (!way_place.includes(document.querySelector(`[data-row="${placeRow}"][data-col="${placeCol}"]`))) {
+//         if (row!==placeRow || col!==placeCol) {
+//             place.style.pointerEvents = "none";
+//             place.style.opacity = "0.5";
+//         }
+//     });
+// }
 
 // function rookFunction(imgClass, hasImg) {
 //     let piecePlace = null;
@@ -245,5 +376,4 @@ function rookFunction(imgClass, hasImg) {
 //         console.log(allowed_place);
 //         return allowed_place;
 //     }
-// }
-
+// 
