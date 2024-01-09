@@ -96,6 +96,7 @@ h3 {
   right: 100px;
   background-color: #779952;
   border-radius: 8px;
+  display:none;
 }
 .content{
   position: absolute;
