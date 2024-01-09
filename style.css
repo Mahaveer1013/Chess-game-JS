@@ -1,6 +1,8 @@
-body {
+*{
   margin: 0;
   padding: 0;
+}
+body {
   background-color: #302e2b;
 }
 h3 {
@@ -10,7 +12,7 @@ h3 {
   display: flex;
   justify-content: center;
 }
-.container {
+.board {
   display: grid;
   height: 100%;
   width: 100%;
@@ -22,7 +24,6 @@ h3 {
   grid-template-columns: auto auto auto auto auto auto auto auto;
 }
 .chess-place {
-  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,4 +78,33 @@ h3 {
 }
 .h1 {
   border-bottom-right-radius: 8px;
+}
+.main{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.cuttedPiece{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+  justify-content: center;
+  position: absolute;
+  right: 100px;
+  background-color: #779952;
+  border-radius: 8px;
+}
+.content{
+  position: absolute;
+  left: 20px;
+  top: 50px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border: solid 2px red;
+  width: 400px;
+  height: 550px;
+
 }
