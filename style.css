@@ -80,9 +80,10 @@ h3 {
   border-bottom-right-radius: 8px;
 }
 .main{
-  /*display: flex;
+  display: flex;
   justify-content: space-around;
-  align-items: center;*/
+  align-items: center;
+  flex-direction: column;
 }
 .cuttedPiece{
   display: flex;
