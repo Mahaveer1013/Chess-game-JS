@@ -457,7 +457,6 @@ function returnColor() {                //after a movement return all piece to i
 function attackOpponent(selectedPiece, targetPlace, targetPiece) {
     player = (curr_player === players[0]) ? players[1] : players[0];
     const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
-    const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
 
     if (selectedPiece.classList.contains(curr_player)) {
         if ((targetPiece.classList.contains(opponentPlayer))) {
