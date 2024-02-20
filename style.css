@@ -11,7 +11,7 @@ body {
   color: #edeed1;
   width: 100%;
 }
-.user-icon{
+.user-icon {
   width: 40px;
   height: auto;
 }
@@ -153,17 +153,27 @@ body {
   font-weight: bolder;
   background-color: #edeed1;
 }
-@media only screen and(max-width:468px) {
+@media all and (max-width: 468px) {
   .menu {
     display: none;
   }
-  .main {
+  .piece-img {
+    width: 80%;
+    height: 80%;
+  }
+  .piece {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  main {
     flex-direction: column;
+    align-items: center;
   }
   .board {
     display: grid;
-    height: 100vh;
-    width: 100vh;
+    height: 90%;
+    width: 90%;
     justify-content: center;
     align-items: center;
     border-radius: 4px;
@@ -175,8 +185,8 @@ body {
     justify-content: center;
     align-items: center;
     /* border: 1px solid; */
-    width: 10%;
-    height: 10%;
+    width: 100%;
+    height: 40px;
     justify-content: center;
     position: relative;
   }
