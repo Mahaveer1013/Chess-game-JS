@@ -28,6 +28,7 @@ chessPlaces.forEach(function (place) {
 // const pawn = document.querySelectorAll('.pawn')
 let allowed_place = [];
 // let allowedChoice = [];
+// let allowedChoice = [];
 let selectedPiece = null;
 let originalPlace = null;
 let bgColor = null;
@@ -56,27 +57,36 @@ function placeClick(event) {
             if (selectedPiece.classList.contains(curr_player)) {
                 clickedPlace.style.backgroundColor = '#fff35f';
                 imgClass = hasImg.classList;
+                console.log(selectedPiece);
                 // console.log(selectedPiece);
                 if (imgClass.contains('rook')) {
+                    console.log(selectedPiece);
                     // console.log(selectedPiece);
                     allowed_place = rookFunction(selectedPiece, allowed_place);
+                    // console.log(allowed_place);
                      
                 }else if (imgClass.contains('knight')) {
                     allowed_place = knightFunction(selectedPiece, allowed_place);
+                    // console.log(allowed_place);
                      
                 }else if (imgClass.contains('bishop')) {
                     allowed_place = bishopFunction(selectedPiece, allowed_place);
+                    // console.log(allowed_place);
                      
                 }else if (imgClass.contains('queen')) {
                     allowed_place = queenFunction(selectedPiece, allowed_place);
+                    // console.log(allowed_place);
                      
                 }else if (imgClass.contains('king')) {
                     allowed_place = kingFunction(selectedPiece, allowed_place);
+                    // console.log(allowed_place);
                      
                 }else if (imgClass.contains('pawn')) {
                     allowed_place = pawnFunction(selectedPiece, allowed_place);
+                    // console.log(allowed_place);
                      
                 }
+                handleAllowedPlaces(allowed_place);
                 handleAllowedPlaces(allowed_place);
             }else {
                 message.innerHTML = 'Select one of your pieces!';
@@ -121,6 +131,16 @@ function placeClick(event) {
 
 
             selectedPiece = null;
+            curr_player = (curr_player === players[0]) ? players[1] : players[0];
+
+            if (!checkMate) {
+                chessPlaces.forEach(place => {
+                    const defaultColor = place.dataset.defaultColor;
+                    place.style.backgroundColor = defaultColor;
+                    place.style.pointerEvents = 'auto';
+                    place.style.opacity = '1';
+                });
+            }
             change_user()
             if (!checkMate) {
                 chessPlaces.forEach(place => {
@@ -135,6 +155,7 @@ function placeClick(event) {
 }
 
 function rookFunction(hasImg, allowed_place) {  // from the clicked im seeing all 4 side from that place , so 4 for loop
+    console.log(hasImg);
     // console.log(hasImg);
     let row = parseInt(hasImg.parentElement.parentElement.dataset.row);
     // console.log(row);
@@ -190,6 +211,7 @@ function rookFunction(hasImg, allowed_place) {  // from the clicked im seeing al
             }
             allowed_place.push([i,col])
         }
+    console.log('rook function '+allowed_place)
     // console.log('rook function '+allowed_place)
     return allowed_place;
 }
@@ -282,6 +304,7 @@ function bishopFunction(hasImg, allowed_place) { // same as rook function but i,
             }
             allowed_place.push([i,j])
         }
+    // console.log(allowed_place)
     // console.log(allowed_place)
     return allowed_place;
 }
@@ -421,6 +444,7 @@ function isNestedArrayPresent(mainArray, nestedArray) {
 }
 
 
+
 function returnColor() {                //after a movement return all piece to its own color(opacity)
     chessPlaces.forEach(place => {
         const defaultColor = place.dataset.defaultColor;
@@ -433,16 +457,17 @@ function returnColor() {                //after a movement return all piece to i
 function attackOpponent(selectedPiece, targetPlace, targetPiece) {
     player = (curr_player === players[0]) ? players[1] : players[0];
     const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
+    const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
 
     if (selectedPiece.classList.contains(curr_player)) {
         if ((targetPiece.classList.contains(opponentPlayer))) {
             const cuttedPiece_place =document.querySelector('.cuttedPiece');
             // console.log(`selected piece availabe `);
         
-            // Move selectedPiece to targetPlace
-            target = targetPlace.querySelector('.piece');
-            target.innerHTML = ``;
-            target.appendChild(selectedPiece);
+                // Move selectedPiece to targetPlace
+                target = targetPlace.querySelector('.piece');
+                target.innerHTML = ``;
+                target.appendChild(selectedPiece);
 
             // Move targetPiece to cuttedPiece_place
             cuttedPiece_place.appendChild(targetPiece);
