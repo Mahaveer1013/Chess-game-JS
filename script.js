@@ -99,9 +99,10 @@ function placeClick(event) {
             // console.log(targetPlace);
             // console.log(targetPiece);
             attackOpponent(selectedPiece, targetPlace, targetPiece);//Attacking opponent
-            if(self_checkMate()){
-                game_over();
-            }
+            // if(self_checkMate()){
+            //     game_over();
+            // }
+            change_user()
             selectedPiece = null;
             returnColor();
         }
@@ -124,9 +125,10 @@ function placeClick(event) {
             const originalPlace = selectedPiece.parentElement.parentElement;
             originalPlace.innerHTML = '';
             originalPlace.style.backgroundColor = originalPlace.dataset.defaultColor;
-            if(self_checkMate()){
-                game_over();
-            }
+            // if(self_checkMate()){
+            //     game_over();
+            // }
+            change_user()
             check_checkMate(piece,opponentPlayer)
 
 
@@ -543,33 +545,33 @@ function game_over() {
         });
 }
 
-function self_checkMate() {
-    const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
-    opponentPiece = document.querySelectorAll('.' + opponentPlayer);
-    opponentAllowedPlace = [];
-    let self_king = document.querySelector('.king.' + curr_player);
-    let self_row = parseInt(self_king.parentElement.parentElement.dataset.row);
-    let self_col = parseInt(self_king.parentElement.parentElement.dataset.col);
-    opponentPiece.forEach((piece) => {
-            imgClass = piece.classList;
-            if (imgClass.contains('rook')) {
-                opponentAllowedPlace.push(rookFunction(piece, opponentAllowedPlace));
-            } else if (imgClass.contains('knight')) {
-                opponentAllowedPlace.push(knightFunction(piece, opponentAllowedPlace));
-            } else if (imgClass.contains('bishop')) {
-                opponentAllowedPlace.push(bishopFunction(piece, opponentAllowedPlace));
-            } else if (imgClass.contains('queen')) {
-                opponentAllowedPlace.push(queenFunction(piece, opponentAllowedPlace));
-            } else if (imgClass.contains('king')) {
-                opponentAllowedPlace.push(kingFunction(piece, opponentAllowedPlace));
-            } else if (imgClass.contains('pawn')) {
-                opponentAllowedPlace.push(pawnFunction(piece, opponentAllowedPlace));
-            }
-        if (isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]))
-            return isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]);
-    })
-    console.log(opponentPlayer);
-    console.log(isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]));
-    return isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col])
+// function self_checkMate() {
+//     const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
+//     opponentPiece = document.querySelectorAll('.' + opponentPlayer);
+//     opponentAllowedPlace = [];
+//     let self_king = document.querySelector('.king.' + curr_player);
+//     let self_row = parseInt(self_king.parentElement.parentElement.dataset.row);
+//     let self_col = parseInt(self_king.parentElement.parentElement.dataset.col);
+//     opponentPiece.forEach((piece) => {
+//             imgClass = piece.classList;
+//             if (imgClass.contains('rook')) {
+//                 opponentAllowedPlace.push(rookFunction(piece, opponentAllowedPlace));
+//             } else if (imgClass.contains('knight')) {
+//                 opponentAllowedPlace.push(knightFunction(piece, opponentAllowedPlace));
+//             } else if (imgClass.contains('bishop')) {
+//                 opponentAllowedPlace.push(bishopFunction(piece, opponentAllowedPlace));
+//             } else if (imgClass.contains('queen')) {
+//                 opponentAllowedPlace.push(queenFunction(piece, opponentAllowedPlace));
+//             } else if (imgClass.contains('king')) {
+//                 opponentAllowedPlace.push(kingFunction(piece, opponentAllowedPlace));
+//             } else if (imgClass.contains('pawn')) {
+//                 opponentAllowedPlace.push(pawnFunction(piece, opponentAllowedPlace));
+//             }
+//         if (isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]))
+//             return isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]);
+//     })
+//     console.log(opponentPlayer);
+//     console.log(isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]));
+//     return isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col])
 
-}
+// }
