@@ -6,8 +6,12 @@ const white_place = document.querySelector('.white-place');
 let players = ['black', 'white'];
 let curr_player = 'white';
 let checkMate = false;
-
-chessPlaces.forEach(function(place) {
+function change_user() {
+    curr_player = (curr_player === players[0]) ? players[1] : players[0];
+    document.querySelector('.curr-user').innerHTML = 'Current Player: <img class="user-icon" src="img/chess-icons/'+curr_player+'/king.png" />'+curr_player.charAt(0).toUpperCase() + curr_player.slice(1)    ;
+}
+change_user()
+chessPlaces.forEach(function (place) {
     place.addEventListener('click', function() {
         var row = parseInt(place.dataset.row);
         var col = parseInt(place.dataset.col);
@@ -42,7 +46,7 @@ function placeClick(event) {
     const hasImg = clickedPlace.querySelector('img');
     if (hasImg) {
         if (selectedPiece == hasImg) {
-            console.log("exit by clicking same piece");
+            // console.log("exit by clicking same piece");
             selectedPiece = null;
             returnColor();
         }
@@ -52,26 +56,26 @@ function placeClick(event) {
             if (selectedPiece.classList.contains(curr_player)) {
                 clickedPlace.style.backgroundColor = '#fff35f';
                 imgClass = hasImg.classList;
-                console.log(selectedPiece);
+                // console.log(selectedPiece);
                 if (imgClass.contains('rook')) {
-                    console.log(selectedPiece);
+                    // console.log(selectedPiece);
                     allowed_place = rookFunction(selectedPiece, allowed_place);
-                    // console.log(allowed_place);
+                     
                 }else if (imgClass.contains('knight')) {
                     allowed_place = knightFunction(selectedPiece, allowed_place);
-                    // console.log(allowed_place);
+                     
                 }else if (imgClass.contains('bishop')) {
                     allowed_place = bishopFunction(selectedPiece, allowed_place);
-                    // console.log(allowed_place);
+                     
                 }else if (imgClass.contains('queen')) {
                     allowed_place = queenFunction(selectedPiece, allowed_place);
-                    // console.log(allowed_place);
+                     
                 }else if (imgClass.contains('king')) {
                     allowed_place = kingFunction(selectedPiece, allowed_place);
-                    // console.log(allowed_place);
+                     
                 }else if (imgClass.contains('pawn')) {
                     allowed_place = pawnFunction(selectedPiece, allowed_place);
-                    // console.log(allowed_place);
+                     
                 }
                 handleAllowedPlaces(allowed_place);
             }else {
@@ -81,18 +85,24 @@ function placeClick(event) {
         } else {
             targetPlace = clickedPlace;
             let targetPiece = targetPlace.querySelector('img');
-            console.log(selectedPiece);
-            console.log(targetPlace);
-            console.log(targetPiece);
-            attackOpponent(selectedPiece, targetPlace,targetPiece);   //Attacking opponent
+            // console.log(selectedPiece);
+            // console.log(targetPlace);
+            // console.log(targetPiece);
+            attackOpponent(selectedPiece, targetPlace, targetPiece);//Attacking opponent
+            if(self_checkMate()){
+                game_over();
+            }
             selectedPiece = null;
             returnColor();
         }
     }
     else {
         if (selectedPiece) {
-            console.log(selectedPiece);
-            // Move the selected piece to the clicked place
+            let self_king = document.querySelector(curr_player + '-king');
+            // console.log(self_king);
+            // check_checkMate()
+            // console.log(selectedPiece);
+             
             let piece = clickedPlace.querySelector('.piece');
             if (!piece) {
                 piece = document.createElement('div');
@@ -101,20 +111,17 @@ function placeClick(event) {
             }
             piece.innerHTML = selectedPiece.outerHTML;
             const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
-
-            // clickedPlace.appendChild(selectedPiece.cloneNode(true));
-
-            // Reset styles of original place
             const originalPlace = selectedPiece.parentElement.parentElement;
             originalPlace.innerHTML = '';
             originalPlace.style.backgroundColor = originalPlace.dataset.defaultColor;
+            if(self_checkMate()){
+                game_over();
+            }
             check_checkMate(piece,opponentPlayer)
 
 
-            // Reset selectedPiece and styles
             selectedPiece = null;
-            curr_player = (curr_player === players[0]) ? players[1] : players[0];
-
+            change_user()
             if (!checkMate) {
                 chessPlaces.forEach(place => {
                     const defaultColor = place.dataset.defaultColor;
@@ -128,13 +135,13 @@ function placeClick(event) {
 }
 
 function rookFunction(hasImg, allowed_place) {  // from the clicked im seeing all 4 side from that place , so 4 for loop
-    console.log(hasImg);
+    // console.log(hasImg);
     let row = parseInt(hasImg.parentElement.parentElement.dataset.row);
     // console.log(row);
     let col = parseInt(hasImg.parentElement.parentElement.dataset.col);
     allowed_place.push([row, col]);
     // console.log(col);
-        console.log(row,col);
+        // console.log(row,col);
         for (let i = col+1; i <= 8; i++) {                 // to check rook movement onto front           
             way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
             hasPiece = way_place.querySelector('img');
@@ -151,7 +158,7 @@ function rookFunction(hasImg, allowed_place) {  // from the clicked im seeing al
             way_place = document.querySelector(`[data-row="${row}"][data-col="${i}"]`)
             hasPiece = way_place.querySelector('img');
             if (hasPiece) {
-                console.log(hasPiece.classList.contains(curr_player));
+                // console.log(hasPiece.classList.contains(curr_player));
                 if (hasPiece.classList.contains(curr_player))
                     break;
                 allowed_place.push([row,i])
@@ -183,12 +190,12 @@ function rookFunction(hasImg, allowed_place) {  // from the clicked im seeing al
             }
             allowed_place.push([i,col])
         }
-    console.log('rook function '+allowed_place)
+    // console.log('rook function '+allowed_place)
     return allowed_place;
 }
 
 function knightFunction(hasImg, allowed_place) { // same as rook function but i,j in for loop has changed according to its movement
-    console.log('hello da');
+    // console.log('hello da');
     let row = parseInt(hasImg.parentElement.parentElement.dataset.row);
     // console.log(row);
     let col = parseInt(hasImg.parentElement.parentElement.dataset.col);
@@ -205,7 +212,7 @@ function knightFunction(hasImg, allowed_place) { // same as rook function but i,
         let hasPlace = document.querySelector(`[data-row="${place[0]}"][data-col="${place[1]}"]`);
         if (hasPlace) {
             let hasImg = hasPlace.querySelector('img');
-            console.log(hasImg);
+            // console.log(hasImg);
             if (hasImg) {
                 if (!(hasImg.classList.contains(curr_player))) {
                     allowed_place.push(place);
@@ -219,15 +226,15 @@ function knightFunction(hasImg, allowed_place) { // same as rook function but i,
 }
 
 function bishopFunction(hasImg, allowed_place) { // same as rook function but i,j in for loop has changed according to its movement
-    console.log('hello da');
+    // console.log('hello da');
     let row = parseInt(hasImg.parentElement.parentElement.dataset.row);
     // console.log(row);
     let col = parseInt(hasImg.parentElement.parentElement.dataset.col);
     allowed_place.push([row, col]);
     // console.log(col);
-    console.log(row, col);
+    // console.log(row, col);
     for (let i = row + 1, j = col + 1; i <= 8 && j <= 8; i++, j++){
-        console.log("check 6,6");             // to check bishop movement onto front
+        // console.log("check 6,6");             // to check bishop movement onto front
         way_place = document.querySelector(`[data-row="${i}"][data-col="${j}"]`)
         hasPiece = way_place.querySelector('img');
         if (hasPiece) {
@@ -294,7 +301,7 @@ function kingFunction(hasImg, allowed_place) {
     allowed_place.push([row, col]);
     placeArray = [[row, col], [row + 1, col], [row + 1, col + 1], [row, col + 1], [row - 1, col], [row - 1, col - 1], [row, col - 1], [row + 1, col - 1], [row - 1, col + 1]];
     placeArray.forEach(place => {
-        console.log(place);
+        // console.log(place);
         way_place = document.querySelector(`[data-row="${place[0]}"][data-col="${place[1]}"]`)
         if (way_place) {
             hasPiece = way_place.querySelector('img');
@@ -393,7 +400,7 @@ function pawnFunction(hasImg, allowed_place) {
     return allowed_place; 
 }
 
-function handleAllowedPlaces(allowed_places) {
+function handleAllowedPlaces(allowed_places) {          //change opacity for allowed place
     const chessPlacesArray = Array.from(chessPlaces);
 
     chessPlacesArray.forEach(place => {
@@ -409,14 +416,12 @@ function handleAllowedPlaces(allowed_places) {
 }
 
 function isNestedArrayPresent(mainArray, nestedArray) {
-    return mainArray.some(arr => 
-        arr.length === nestedArray.length &&
-        arr.every((value, index) => value === nestedArray[index])
-    );
+    console.log(mainArray);
+    return mainArray.some(arr => JSON.stringify(arr) === JSON.stringify(nestedArray));
 }
 
 
-function returnColor() {
+function returnColor() {                //after a movement return all piece to its own color(opacity)
     chessPlaces.forEach(place => {
         const defaultColor = place.dataset.defaultColor;
         place.style.backgroundColor = defaultColor;
@@ -432,7 +437,7 @@ function attackOpponent(selectedPiece, targetPlace, targetPiece) {
     if (selectedPiece.classList.contains(curr_player)) {
         if ((targetPiece.classList.contains(opponentPlayer))) {
             const cuttedPiece_place =document.querySelector('.cuttedPiece');
-            console.log(`selected piece availabe `);
+            // console.log(`selected piece availabe `);
         
             // Move selectedPiece to targetPlace
             target = targetPlace.querySelector('.piece');
@@ -445,59 +450,61 @@ function attackOpponent(selectedPiece, targetPlace, targetPiece) {
             check_checkMate(targetPlace,opponentPlayer)
 
             selectedPiece = null;
-            curr_player = (curr_player === players[0]) ? players[1] : players[0];
+            change_user();
 
-            chessPlaces.forEach(place => {
-                const defaultColor = place.dataset.defaultColor;
-                place.style.backgroundColor = defaultColor;
-                place.style.pointerEvents = 'auto';
-                place.style.opacity = '1';
-            });
+            returnColor();
         }
     }
 }
+
 function check_checkMate(piece, opponentPlayer) {
-    // let pieceRow = parseInt(targetPlace.dataset.row);
-    // let pieceCol = parseInt(targetPlace.dataset.col);
-    // console.log(selectedPiece.parentElement.parentElement);
     let currPiece = piece.querySelector('img');
     allowed_place = [];
     if (imgClass.contains('rook')) {
-        // console.log(selectedPiece);
+         
         allowed_place = rookFunction(currPiece, allowed_place);
-        // console.log(allowed_place);
+         
     }else if (imgClass.contains('knight')) {
         allowed_place = knightFunction(currPiece, allowed_place);
-        // console.log(allowed_place);
+         
     }else if (imgClass.contains('bishop')) {
         allowed_place = bishopFunction(currPiece, allowed_place);
-        // console.log(allowed_place);
+         
     }else if (imgClass.contains('queen')) {
         allowed_place = queenFunction(currPiece, allowed_place);
-        // console.log(allowed_place);
+         
     }else if (imgClass.contains('king')) {
         allowed_place = kingFunction(currPiece, allowed_place);
-        // console.log(allowed_place);
+         
     }else if (imgClass.contains('pawn')) {
         allowed_place = pawnFunction(currPiece, allowed_place);
-        // console.log(allowed_place);
+         
     }
     
-    console.log('allowed Choice '+allowed_place);
+    // console.log('allowed Choice '+allowed_place);
     let opponentKing = document.querySelector(`.king.${opponentPlayer}`)
     opponentKingPlace = opponentKing.parentElement.parentElement;
-    console.log('Opponent King Place '+opponentKingPlace);
+    // console.log('Opponent King Place '+opponentKingPlace);
     let opponentKingRow = parseInt(opponentKingPlace.dataset.row);
     var opponentKingCol = parseInt(opponentKingPlace.dataset.col);
-    console.log([opponentKingRow,opponentKingCol]);
-    console.log(allowed_place.includes([opponentKingRow, opponentKingCol]));
+    // console.log([opponentKingRow,opponentKingCol]);
+    // console.log(allowed_place.includes([opponentKingRow, opponentKingCol]));
     let check_checkMate=isNestedArrayPresent(allowed_place,[opponentKingRow, opponentKingCol])
     // if (allowed_place.includes([opponentKingRow, opponentKingCol]))
     if (check_checkMate) {
-        opponentKing.style.backgroundColor = 'red';
+        game_over();
+    }
+}
+
+function game_over() {
+    const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
+
+    let opponentKing = document.querySelector(`.king.${opponentPlayer}`)
+
+    opponentKing.style.backgroundColor = 'red';
     
         chessPlaces.forEach(place => {
-            console.log('locked');
+            // console.log('locked');
             place.style.pointerEvents = "none";
             place.style.opacity = "0.3";
             checkMate = true;
@@ -510,5 +517,35 @@ function check_checkMate(piece, opponentPlayer) {
         restart.addEventListener('click', () => {
             window.location.href = '';
         });
-    }
+}
+
+function self_checkMate() {
+    const opponentPlayer = (curr_player === players[0]) ? players[1] : players[0];
+    opponentPiece = document.querySelectorAll('.' + opponentPlayer);
+    opponentAllowedPlace = [];
+    let self_king = document.querySelector('.king.' + curr_player);
+    let self_row = parseInt(self_king.parentElement.parentElement.dataset.row);
+    let self_col = parseInt(self_king.parentElement.parentElement.dataset.col);
+    opponentPiece.forEach((piece) => {
+            imgClass = piece.classList;
+            if (imgClass.contains('rook')) {
+                opponentAllowedPlace.push(rookFunction(piece, opponentAllowedPlace));
+            } else if (imgClass.contains('knight')) {
+                opponentAllowedPlace.push(knightFunction(piece, opponentAllowedPlace));
+            } else if (imgClass.contains('bishop')) {
+                opponentAllowedPlace.push(bishopFunction(piece, opponentAllowedPlace));
+            } else if (imgClass.contains('queen')) {
+                opponentAllowedPlace.push(queenFunction(piece, opponentAllowedPlace));
+            } else if (imgClass.contains('king')) {
+                opponentAllowedPlace.push(kingFunction(piece, opponentAllowedPlace));
+            } else if (imgClass.contains('pawn')) {
+                opponentAllowedPlace.push(pawnFunction(piece, opponentAllowedPlace));
+            }
+        if (isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]))
+            return isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]);
+    })
+    console.log(opponentPlayer);
+    console.log(isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col]));
+    return isNestedArrayPresent(opponentAllowedPlace, [self_row, self_col])
+
 }

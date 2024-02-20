@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
 }
@@ -11,10 +11,14 @@ body {
   color: #edeed1;
   width: 100%;
 }
+.user-icon{
+  width: 40px;
+  height: auto;
+}
 .board {
   display: grid;
   height: 100%;
-  width: 100%;
+  width: 100vh;
   justify-content: center;
   align-items: center;
   border-radius: 4px;
@@ -77,8 +81,9 @@ body {
 .h1 {
   border-bottom-right-radius: 8px;
 }
-.main{
+.main {
   display: flex;
+  justify-content: center;
 }
 /* .cuttedPiece{
   display: flex;
@@ -90,27 +95,27 @@ body {
   background-color: #779952;
   border-radius: 8px;
 } */
-.content{
+.content {
   position: absolute;
   left: 20px;
   top: 50px;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  border: solid 2px red;
+  /* border: solid 2px red; */
   width: 400px;
   height: 550px;
-
 }
-.menu,.board,.cuttedPiece{
+/* .menu,.board,.cuttedPiece{
   border: 2px solid red;
-}
-.menu,.cuttedPiece{
+} */
+.menu,
+.cuttedPiece {
   /* width: 350px; */
   min-width: 250px;
   max-width: 350px;
 }
-.header{
+.header {
   width: 100%;
   height: 100px;
   display: flex;
@@ -118,22 +123,23 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.player,.message-div{
+.player,
+.message-div {
   padding: 15px;
   height: 20px;
 }
-.player{
-  color:#edeed1;
+.player {
+  color: #edeed1;
   font-weight: 600;
 }
-.restart-btn{
+.restart-btn {
   font-size: 50px;
   padding: 20px;
   background-color: #779952;
-  color:#302e2b ;
+  color: #302e2b;
   /* display: none; */
 }
-.restart{
+.restart {
   display: none;
   flex-direction: column;
   position: absolute;
@@ -141,17 +147,37 @@ body {
   left: 525px;
   top: 300px;
 }
-.win-msg{
+.win-msg {
   color: #302e2b;
   font-size: 70px;
   font-weight: bolder;
   background-color: #edeed1;
 }
-@media only screen and(max-width:768px){
-  .menu{
+@media only screen and(max-width:468px) {
+  .menu {
     display: none;
   }
-  .main{
+  .main {
     flex-direction: column;
+  }
+  .board {
+    display: grid;
+    height: 100vh;
+    width: 100vh;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    border: wheat;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
+  }
+  .chess-place {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid; */
+    width: 10%;
+    height: 10%;
+    justify-content: center;
+    position: relative;
   }
 }
